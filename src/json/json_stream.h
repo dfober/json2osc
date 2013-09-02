@@ -16,6 +16,7 @@
 #define json_stream__
 
 #include <ostream>
+#include "export.h"
 
 namespace json
 {
@@ -26,7 +27,7 @@ namespace json
 \brief to be used in place of std::endl
 	to provide indentation of the json output.
 */
-class json_endl {
+class jsonexport json_endl {
 	private:
 		int fIndent;
 	public:
@@ -51,7 +52,7 @@ inline std::ostream& operator<< (std::ostream& os, const json_endl& eol) { eol.p
 \internal
 \brief a stream that embed a special endl for output formatting
 */
-class json_stream {
+class jsonexport json_stream {
 	std::ostream&	fStream;
 	json_endl		fEndl;
 	public:
@@ -63,8 +64,8 @@ class json_stream {
 			  json_endl& nl()				{ return fEndl; }
 };
 
-class json_array;
-class json_object;
+class jsonexport json_array;
+class jsonexport json_object;
 /// \private
 json_stream& operator<< (json_stream& os, const json_object* obj);
 /// \private

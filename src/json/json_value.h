@@ -18,7 +18,10 @@
 #include <string>
 #include <iostream>
 #include "json_stream.h"
+#ifndef JSON_ONLY
 #include "osc_stream.h"
+#endif
+#include "export.h"
 
 namespace json
 {
@@ -32,7 +35,7 @@ class json_array;
 	json values are as defined by the json spec (see http://json.org/)
 	each kind of value is embedded in a specific class derived from json_value
 */
-class json_value
+class jsonexport json_value
 {
 	public:
 		virtual ~json_value() {}
@@ -47,7 +50,9 @@ class json_value
 		 \param out the output strem
 		*/
 		virtual void	print(json_stream& out) const {}
+#ifndef JSON_ONLY
 		virtual void	print(osc_stream& out) const {}
+#endif
 };
 
 /// \private
@@ -58,7 +63,7 @@ inline json_stream& operator << (json_stream& os, const json_value& val)	{ val.p
 /*!
 	\brief json object value
 */
-class json_object_value : public json_value
+class jsonexport json_object_value : public json_value
 {
 	const json_object*	fValue;
 	public:
@@ -67,14 +72,16 @@ class json_object_value : public json_value
 		
 		const json_object*	getValue() const	{ return fValue; }
 		void	print(json_stream& out) const;
+#ifndef JSON_ONLY
 		void	print(osc_stream& out) const;
+#endif
 };
 
 //--------------------------------------------------------------------------
 /*!
 	\brief json array value
 */
-class json_array_value : public json_value
+class jsonexport json_array_value : public json_value
 {
 	const json_array*	fValue;
 	public:
@@ -83,14 +90,16 @@ class json_array_value : public json_value
 		
 		const json_array*	getValue() const	{ return fValue; }
 		void	print(json_stream& out) const;
+#ifndef JSON_ONLY
 		void	print(osc_stream& out) const;
+#endif
 };
 
 //--------------------------------------------------------------------------
 /*!
 	\brief json numeric value
 */
-class json_int_value : public json_value
+class jsonexport json_int_value : public json_value
 {
 	long	fValue;
 	public:
@@ -99,14 +108,16 @@ class json_int_value : public json_value
 		
 		int		getValue() const				{ return fValue; }
 		void	print(json_stream& out) const	{ out << fValue; }
+#ifndef JSON_ONLY
 		void	print(osc_stream& out) const	{ out << fValue; }
+#endif
 };
 
 //--------------------------------------------------------------------------
 /*!
 	\brief json numeric float value
 */
-class json_float_value : public json_value
+class jsonexport json_float_value : public json_value
 {
 	double	fValue;
 	public:
@@ -115,7 +126,9 @@ class json_float_value : public json_value
 		
 		double	getValue() const				{ return fValue; }
 		void	print(json_stream& out) const	{ out << fValue; }
+#ifndef JSON_ONLY
 		void	print(osc_stream& out) const	{ out << fValue; }
+#endif
 };
 
 //--------------------------------------------------------------------------
@@ -125,7 +138,7 @@ class json_float_value : public json_value
 	string values are stored with unescaped '"'. Other special characters remains escaped.
 	see http://json.org/
 */
-class json_string_value : public json_value
+class jsonexport json_string_value : public json_value
 {
 	std::string fValue;
 	public:
@@ -136,14 +149,16 @@ class json_string_value : public json_value
 
 		std::string	to_json() const;				///< converts the value to json string (with escape) 
 		void	print(json_stream& out) const		{ out << '"' << to_json() << '"'; }
+#ifndef JSON_ONLY
 		void	print(osc_stream& out) const		{ out << fValue; }
+#endif
 };
 
 //--------------------------------------------------------------------------
 /*!
 	\brief json null value
 */
-class json_null_value : public json_value
+class jsonexport json_null_value : public json_value
 {
 	public:
 				 json_null_value() {}
@@ -151,14 +166,16 @@ class json_null_value : public json_value
 		
 		int		getValue() const				{ return 0; }
 		void	print(json_stream& out) const	{ out << "null"; }
+#ifndef JSON_ONLY
 		void	print(osc_stream& out) const	{ out << 0; }
+#endif
 };
 
 //--------------------------------------------------------------------------
 /*!
 	\brief json true value
 */
-class json_true_value : public json_value
+class jsonexport json_true_value : public json_value
 {
 	public:
 				 json_true_value() {}
@@ -166,14 +183,16 @@ class json_true_value : public json_value
 		
 		bool	getValue() const				{ return true; }
 		void	print(json_stream& out) const	{ out << "true"; }
+#ifndef JSON_ONLY
 		void	print(osc_stream& out) const	{ out << 1; }
+#endif
 };
 
 //--------------------------------------------------------------------------
 /*!
 	\brief json false value
 */
-class json_false_value : public json_value
+class jsonexport json_false_value : public json_value
 {
 	public:
 				 json_false_value() {}
@@ -181,7 +200,9 @@ class json_false_value : public json_value
 		
 		bool	getValue() const				{ return false; }
 		void	print(json_stream& out) const	{ out << "false"; }
+#ifndef JSON_ONLY
 		void	print(osc_stream& out) const	{ out << 0; }
+#endif
 };
 
 

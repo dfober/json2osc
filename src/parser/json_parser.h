@@ -16,6 +16,7 @@
 
 #include <iostream>
 #include <string>
+#include "export.h"
 
 namespace json
 {
@@ -25,7 +26,7 @@ class json_object;
 //--------------------------------------------------------------------------
 /* \brief a class for reading json streams
 */
-class json_parser {
+class jsonexport json_parser {
 		
 	void initScanner();
 	void destroyScanner();

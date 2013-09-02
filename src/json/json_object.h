@@ -17,6 +17,7 @@
 
 #include <vector>
 #include "json_element.h"
+#include "export.h"
 
 namespace json
 {
@@ -27,7 +28,7 @@ class osc_stream;
 /*!
 	\brief a json object, as defined by the json spec (see http://json.org/)
 */
-class json_object
+class jsonexport json_object
 {
 	std::vector<const json_element*>	fElements;
 	
@@ -43,8 +44,10 @@ class json_object
 		
 		/// \brief print the element to the json stream (for indented output)
 		virtual void	print(json_stream& out) const;
+#ifndef JSON_ONLY
 		/// \brief print the element to the osc stream
 		virtual void	print(osc_stream& out) const;
+#endif
 		/// \brief print the element to the output stream
 		virtual void	print(std::ostream& out) const;
 };

@@ -18,6 +18,7 @@
 #include <string>
 #include "json_value.h"
 #include "json_stream.h"
+#include "export.h"
 
 namespace json
 {
@@ -27,7 +28,7 @@ class osc_stream;
 /*!
 	\brief a json element, actually a pair name/value
 */
-class json_element
+class jsonexport json_element
 {
 	std::string			fName;
 	const json_value *	fValue;

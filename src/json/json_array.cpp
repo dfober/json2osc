@@ -30,6 +30,7 @@ json_array::~json_array()
 }
 
 // --------------------------------------------------------------
+#ifndef JSON_ONLY
 void json_array::print(osc_stream& out) const
 {
 	unsigned int n = fValues.size();
@@ -37,6 +38,7 @@ void json_array::print(osc_stream& out) const
 		fValues[i]->print(out);
 	}	
 }
+#endif
 
 // --------------------------------------------------------------
 void json_array::print(json_stream& out) const

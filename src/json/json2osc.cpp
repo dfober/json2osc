@@ -15,7 +15,9 @@
 
 #include "json2osc.h"
 #include "json_object.h"
-#include "osc_stream.h"
+#ifndef JSON_ONLY
+# include "osc_stream.h"
+#endif
 
 using namespace std;
 

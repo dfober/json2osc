@@ -25,12 +25,16 @@ namespace json
 //--------------------------------------------------------------------------
 json_object_value::~json_object_value()					{ delete fValue; }
 void json_object_value::print(json_stream& out) const	{ out << fValue; }
+#ifndef JSON_ONLY
 void json_object_value::print(osc_stream& out) const	{ fValue->print(out); }
+#endif
 
 //--------------------------------------------------------------------------
 json_array_value::~json_array_value()					{ delete fValue; }
 void json_array_value::print(json_stream& out) const	{ out << fValue; }
+#ifndef JSON_ONLY
 void json_array_value::print(osc_stream& out) const		{ fValue->print(out); }
+#endif
 
 
 //--------------------------------------------------------------------------

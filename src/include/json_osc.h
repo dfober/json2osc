@@ -89,6 +89,7 @@ Multiple messages can be included in a single JSON : they should be encoded usin
 #define json_osc__
 
 #include "osc2json.h"
+#include "export.h"
 
 namespace json
 {
@@ -106,13 +107,13 @@ enum { kNoError, kSyntaxError, kIncorrectParameter, kNoSuchFile, kCantBindSocket
 	\note The function does not return since it listens to a socket. 
 	Thus the caller is responsible of calling the function in a separate thread when appropriate.
 */
-int			start_osc2json	(osc2json* client, int port, osc_listener** listener);
+jsonexport int				start_osc2json	(osc2json* client, int port, osc_listener** listener);
 
 /**
 	\brief stops osc to json conversion
 	\param listener an osc listener that has been previously returned by start_osc2json
 */
-void			stop_osc2json	(osc_listener* listener);
+jsonexport void				stop_osc2json	(osc_listener* listener);
 
 /**
 	\brief starts json to osc conversion
@@ -122,7 +123,7 @@ void			stop_osc2json	(osc_listener* listener);
 	\note sending a json string including a destination and/or a udp port changes 
 	the default destination and/or default udp port number.
 */
-osc_stream*		start_json2osc	(const char* defaultDest, int defaultPort);
+jsonexport osc_stream*		start_json2osc	(const char* defaultDest, int defaultPort);
 
 /**
 	\brief sends a json string as osc packets
@@ -130,7 +131,7 @@ osc_stream*		start_json2osc	(const char* defaultDest, int defaultPort);
 	\param stream an osc stream that has been previously returned by start_json2osc
 	\return an error code or kNoError when no error
 */
-int				send			(const char * json, osc_stream* stream);
+jsonexport int				send			(const char * json, osc_stream* stream);
 
 /**
 	\brief sends a json file as osc packets
@@ -138,20 +139,20 @@ int				send			(const char * json, osc_stream* stream);
 	\param stream an osc stream that has been previously returned by start_json2osc
 	\return an error code or kNoError when no error
 */
-int				sendfile		(const char * file, osc_stream* stream);
+jsonexport int				sendfile		(const char * file, osc_stream* stream);
 
 /**
 	\brief stops json to osc conversion
 	\param stream an osc stream that has been previously returned by start_json2osc
 */
-void			stop_json2osc	(osc_stream* stream);
+jsonexport void				stop_json2osc	(osc_stream* stream);
 
 /**
 	\brief gives a textual description of an error
 	\param error an error code 
 	\return a string
 */
-const char*		error_string	(int error);
+jsonexport const char*		error_string	(int error);
 
 
 } // end namespoace

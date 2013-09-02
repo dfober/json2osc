@@ -16,6 +16,7 @@
 #define json_array__
 
 #include <vector>
+#include "export.h"
 
 namespace json
 {
@@ -27,7 +28,7 @@ class osc_stream;
 /*!
 	\brief a json array, as defined by the json spec (see http://json.org/)
 */
-class json_array
+class jsonexport json_array
 {
 	std::vector<const json_value *>	fValues;
 	
@@ -37,7 +38,9 @@ class json_array
 
 		virtual void	add(const json_value * val)		{ fValues.push_back(val); }
 		virtual void	print(json_stream& out) const;
+#ifndef JSON_ONLY
 		virtual void	print(osc_stream& out) const;
+#endif
 };
 
 } // end namespace

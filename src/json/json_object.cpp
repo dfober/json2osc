@@ -14,7 +14,9 @@
 #include "json_object.h"
 #include "json_stream.h"
 #include "json2osc.h"
-#include "osc_stream.h"
+#ifndef JSON_ONLY
+# include "osc_stream.h"
+#endif
 
 using namespace std;
 namespace json
@@ -61,6 +63,7 @@ void json_object::print(json_stream& out) const
 };
 
 // --------------------------------------------------------------
+#ifndef JSON_ONLY
 void json_object::print(osc_stream& out) const
 {
 	const json_element* list = getKey (kOSCMarker);
@@ -97,5 +100,6 @@ void json_object::print(osc_stream& out) const
 		}
 	}
 }
+#endif
 
 } // end namespace
