@@ -2,8 +2,18 @@ project(json2osc)
 cmake_minimum_required(VERSION 2.6)
 
 #######################################
+if ( JSONONLY )
+	message (STATUS "Generates json project - Use -DJSONONLY=0 to change.")
+	add_definitions(-DJSON_ONLY)
+	set (target json)
+else()
+	message (STATUS "Generates json2osc project - Use -DJSONONLY=1 to change.")
+	set (target json2osc)
+endif ()
+
+
+#######################################
 # target and versions management
-set (target json2osc)
 set (VERSION 0.5)
 set (STRVERS "v.0.5")
 set (SOVERS 1)
@@ -19,6 +29,7 @@ if(WIN32)
 else(WIN32)
 	add_definitions(-Wall -fPIC)
 endif(WIN32)
+add_definitions(-DJSONExport)
 
 if(APPLE)
 
@@ -39,27 +50,36 @@ endif(APPLE)
 #######################################
 # SET MAIN DIRECTORY.
 set(SRC ${CMAKE_CURRENT_SOURCE_DIR}/../src)
-set (OSC_PATH  "${CMAKE_CURRENT_SOURCE_DIR}/../lib/oscpack")
+
 
 #######################################
-# SET SOURCES
-FILE(GLOB JSON_SRC "${SRC}/*/*.cpp")
-#######################################
-# SET HEADERS
-FILE(GLOB JSON_H "${SRC}/*/*.h")
+# SET SOURCES AND HEADERS
+if ( JSONONLY )
+	FILE(GLOB JSON_SRC "${SRC}/json/*.cpp" "${SRC}/parser/*.cpp")
+	FILE(GLOB JSON_H "${SRC}/json/*.h" "${SRC}/parser/*.h")
+	FILE (GLOB PUBLICHEADERS RELATIVE ${CMAKE_CURRENT_SOURCE_DIR} "${SRC}/json/*.h" "${SRC}/parser/*.h")
+else()
+	FILE(GLOB JSON_SRC "${SRC}/*/*.cpp"*)
+	FILE(GLOB JSON_H "${SRC}/*/*.h")
+	FILE (GLOB PUBLICHEADERS RELATIVE ${CMAKE_CURRENT_SOURCE_DIR} "${SRC}/*/*.h")
+	include_directories(${INCL} ${SRC}/json ${SRC}/osc ${SRC}/parser ${SRC}/include ${OSC_PATH})
+endif()
+
+include_directories(${INCL} ${SRC}/json ${SRC}/parser ${SRC}/include)
 
 #######################################
 # set libraries
-if(APPLE)
-	set(OSCPACK  ${OSC_PATH}/cmake/Release/liboscpack.a)
-elseif(UNIX)
-	set(OSCPACK  -L${OSC_PATH}/cmake -loscpack)
-elseif(WIN32)
-	set(OSCPACK  ${OSC_PATH}/cmake/release/oscpack.lib)
+if ( NOT JSONONLY )
+	set (OSC_PATH  "${CMAKE_CURRENT_SOURCE_DIR}/../lib/oscpack")
+	if(APPLE)
+		set(OSCPACK  ${OSC_PATH}/cmake/Release/liboscpack.a)
+	elseif(UNIX)
+		set(OSCPACK  -L${OSC_PATH}/cmake -loscpack)
+	elseif(WIN32)
+		set(OSCPACK  ${OSC_PATH}/cmake/release/oscpack.lib)
+	endif()
+	include_directories(${INCL} ${SRC}/osc ${OSC_PATH})
 endif()
-
-#######################################
-include_directories(${INCL} ${SRC}/json ${SRC}/osc ${SRC}/parser ${SRC}/include ${OSC_PATH})
 
 #######################################
 # target lib settings
@@ -67,11 +87,14 @@ if ( NOT IOS STREQUAL "yes" )
 	if (STATIC STREQUAL "yes")
 		message (STATUS "Generates a static library - Use -DSTATIC=no to change.")
 		set (lib "STATIC")
+		set (instlib "ARCHIVE")
 	else ()
 		message (STATUS "Generates a dynamic library - Use -DSTATIC=yes to change.")
 		set (lib "SHARED")
+		set (instlib "LIBRARY")
 	endif ()
 endif ()
+
 
 add_library(${target} ${lib} ${JSON_SRC} ${JSON_H} )
 set_target_properties (${target} PROPERTIES
@@ -90,6 +113,23 @@ endif()
 
 #######################################
 # test utility settings
-add_executable( jsontest ${CMAKE_CURRENT_SOURCE_DIR}/../test/jsontest.cpp )
-target_link_libraries(jsontest ${target} ${OSCPACK} )
+if ( NOT JSONONLY )
+	add_executable( jsontest ${CMAKE_CURRENT_SOURCE_DIR}/../test/jsontest.cpp )
+	target_link_libraries(jsontest ${target} ${OSCPACK} )
+endif()
 
+#######################################
+# install setup
+if (NOT WIN32 AND NOT IOS)
+ if (DEFINED LIBINSTALL)
+	set(LIBPATH ${LIBINSTALL})
+ else (DEFINED LIBINSTALL)
+	set(LIBPATH "/usr/local/lib")
+ endif (DEFINED LIBINSTALL)
+ message (STATUS "Library install path set to ${LIBPATH} - Use -DLIBINSTALL=path to change.")
+
+install ( TARGETS ${target}
+    	${instlib} DESTINATION ${LIBPATH}
+    	PUBLIC_HEADER DESTINATION /usr/local/include/${target}
+)
+endif()
