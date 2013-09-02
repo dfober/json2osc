@@ -7,6 +7,7 @@ set (target json2osc)
 set (VERSION 0.5)
 set (STRVERS "v.0.5")
 set (SOVERS 1)
+set (STATIC "yes")
 
 #######################################
 # cmake build types configuration
@@ -20,18 +21,20 @@ else(WIN32)
 endif(WIN32)
 
 if(APPLE)
-	set (CMAKE_OSX_ARCHITECTURES "x86_64 i386")
-	if (${CMAKE_SYSTEM_VERSION} VERSION_LESS 9.0.0)
-		set (CMAKE_OSX_SYSROOT /Developer/SDKs/MacOSX10.4u.sdk)
-	elseif (${CMAKE_SYSTEM_VERSION} VERSION_LESS 10.8.0)
-		set (CMAKE_OSX_SYSROOT /Developer/SDKs/MacOSX10.5.sdk)
-	elseif (${XCODE_VERSION} VERSION_LESS 4.0.0)
-		set (CMAKE_OSX_SYSROOT /Developer/SDKs/MacOSX10.6.sdk)
+
+#######################################
+#   iOS support
+	if ( IOS STREQUAL "yes" )
+		message (STATUS "Generates project for iOS - Use -DIOS=no to change.")
+		set (CMAKE_XCODE_EFFECTIVE_PLATFORMS "-iphoneos;-iphonesimulator")
+		set (CMAKE_OSX_ARCHITECTURES "$(ARCHS_STANDARD_32_BIT)")
+		set (CMAKE_OSX_SYSROOT "iphoneos")
+		set (lib "STATIC")
 	else ()
-		set (CMAKE_OSX_SYSROOT "macosx10.7")
+		message (STATUS "Generates Mac OS project- Use -DIOS=yes to change.")
 	endif ()
-	set(CMAKE_C++_FLAGS -mmacosx-version-min=10.4)
 endif(APPLE)
+
 
 #######################################
 # SET MAIN DIRECTORY.
@@ -60,12 +63,14 @@ include_directories(${INCL} ${SRC}/json ${SRC}/osc ${SRC}/parser ${SRC}/include 
 
 #######################################
 # target lib settings
-if (STATIC STREQUAL "yes")
-	message (STATUS "Generates a static library - Use -DSTATIC=no to change.")
-	set (lib "STATIC")
-else ()
-	message (STATUS "Generates a dynamic library - Use -DSTATIC=yes to change.")
-	set (lib "SHARED")
+if ( NOT IOS STREQUAL "yes" )
+	if (STATIC STREQUAL "yes")
+		message (STATUS "Generates a static library - Use -DSTATIC=no to change.")
+		set (lib "STATIC")
+	else ()
+		message (STATUS "Generates a dynamic library - Use -DSTATIC=yes to change.")
+		set (lib "SHARED")
+	endif ()
 endif ()
 
 add_library(${target} ${lib} ${JSON_SRC} ${JSON_H} )
