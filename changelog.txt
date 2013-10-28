@@ -1,0 +1,12 @@
+====================================================
+               json2osc - Change log
+----------------------------------------------------
+GRAME - Centre national de creation musicale
+http://www.grame.fr
+====================================================
+Copyright GRAME (c) 2013
+====================================================
+
+----------------------------------------------------
+Version 0.50
+first version, includes a separate config to compile the json part only.
