@@ -36,7 +36,8 @@ class jsonexport json_array
 				 json_array() {}
 		virtual ~json_array();
 
-		virtual void	add(const json_value * val)		{ fValues.push_back(val); }
+		const std::vector<const json_value *>&	values() const	{ return fValues; }
+		virtual void	add(const json_value * val)				{ fValues.push_back(val); }
 		virtual void	print(json_stream& out) const;
 #ifndef JSON_ONLY
 		virtual void	print(osc_stream& out) const;
