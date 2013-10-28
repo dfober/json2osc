@@ -49,9 +49,9 @@ class jsonexport json_value
 		 \brief abstract interface for printing
 		 \param out the output strem
 		*/
-		virtual void	print(json_stream& out) const {}
+		virtual void	print(json_stream&) const {}
 #ifndef JSON_ONLY
-		virtual void	print(osc_stream& out) const {}
+		virtual void	print(osc_stream&) const {}
 #endif
 };
 
