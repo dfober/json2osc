@@ -35,14 +35,16 @@ if(APPLE)
 
 #######################################
 #   iOS support
-	if ( IOS STREQUAL "yes" )
+	if ( IOS  )
 		message (STATUS "Generates project for iOS - Use -DIOS=no to change.")
 		set (CMAKE_XCODE_EFFECTIVE_PLATFORMS "-iphoneos;-iphonesimulator")
 		set (CMAKE_OSX_ARCHITECTURES "$(ARCHS_STANDARD_32_BIT)")
 		set (CMAKE_OSX_SYSROOT "iphoneos")
 		set (lib "STATIC")
 	else ()
-		message (STATUS "Generates Mac OS project- Use -DIOS=yes to change.")
+		message (STATUS "Generates Mac OS project - Use -DIOS=yes to change.")
+		set (CMAKE_OSX_ARCHITECTURES "x86_64 i386")
+		set (CMAKE_OSX_DEPLOYMENT_TARGET 10.6)
 		set (CMAKE_C++_FLAGS -mmacosx-version-min=10.6)
 	endif ()
 endif(APPLE)
@@ -84,8 +86,8 @@ endif()
 
 #######################################
 # target lib settings
-if ( NOT IOS STREQUAL "yes" )
-	if (STATIC STREQUAL "yes")
+if ( NOT IOS )
+	if ( STATIC )
 		message (STATUS "Generates a static library - Use -DSTATIC=no to change.")
 		set (lib "STATIC")
 		set (instlib "ARCHIVE")
@@ -104,7 +106,7 @@ set_target_properties (${target} PROPERTIES
 			SOVERSION ${SOVERS})
 target_link_libraries(${target} ${OSCPACK} )
 
-if (FRAMEWORK STREQUAL "yes")
+if (FRAMEWORK)
 	set_target_properties (${target} PROPERTIES 
 			FRAMEWORK TRUE
 			MACOSX_FRAMEWORK_SHORT_VERSION_STRING ${STRVERS}
